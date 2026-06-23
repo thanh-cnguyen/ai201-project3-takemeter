@@ -89,23 +89,69 @@ Use `community_prompt` if the question is the main content. If the author’s ow
 
 ## Hard Edge Cases
 
-### Evidence-based take vs. reasoned opinion
+### General Edge Case Rules
+
+#### Evidence-based take vs. reasoned opinion
 
 Some posts mention specific artists, albums, songs, or examples, but still mainly rely on personal interpretation. I will label a post as `evidence_based_take` only when the examples are central to proving the claim. If the examples mainly illustrate the author’s taste or feelings, I will label it as `reasoned_opinion`.
 
-### Reasoned opinion vs. community prompt
+#### Reasoned opinion vs. community prompt
 
 Some posts begin with the author’s opinion and then ask the community a question. I will label the post as `community_prompt` only when the main purpose is to collect responses from other users. If the author develops a substantial argument before asking the question, I will label it as `reasoned_opinion` or `evidence_based_take`.
 
-### Short unsupported reactions
+#### Short unsupported reactions
 
 Some comments may only express quick praise, dislike, or agreement without explanation. Since I removed the `low_effort_reaction` label to keep the taxonomy grounded in `r/LetsTalkMusic`, I will avoid using extremely short unsupported reactions as training examples when possible. If a short comment includes at least one meaningful reason, I will label it as `reasoned_opinion`.
+
+### Difficult Examples Found during Annotation
+
+#### Difficult Example 1
+
+**Text / summary:**  
+Anyone else here dislike solo acoustic singer performances? Im talking about the busker types of performers where its just them singing while playing a guitar, whether be it originals or covers. I get the essence of acoustic singers. Logisticswise, they're the best pick (easy set up and pack up time, doesnt take up space, music isnt too jarring to bystanders) but to me, I just find it monotonous after 1-2 songs. What appeals me to music is seeing how 2 or more people lock in with one another to produce something cool. Yet however on the flip side, when I do go see an acoustic performer, I make sure its one I really really like.
+
+**Possible labels:**  
+`reasoned_opinion`, `community_prompt`
+
+**Final label:**  
+`reasoned_opinion`
+
+**Decision:**  
+The post primarily expresses the author's personal opinion about solo acoustic performances, providing reasons for their preference. Although it asks a question at the beginning, the main content is the author's argument, making `reasoned_opinion` the most appropriate label.
+
+### Difficult Example 2
+
+**Text / summary:**  
+He was more known in r&b circles, particularly when he was at Motown. His biggest hit "let's get serious" which was written by Stevie Wonder did really well on the pop and r&b charts. I honestly think he's underrated as an artist if you ask me. Only problem was that his brother was the king of pop
+
+**Possible labels:**  
+`reasoned_opinion`, `evidence_based_take`
+
+**Final label:**  
+`evidence_based_take`
+
+**Decision:**  
+The post provides specific examples of the artist's work and achievements, using them to support the claim that the artist is underrated. This makes `evidence_based_take` the most appropriate label.
+
+### Difficult Example 3
+
+**Text / summary:**  
+Do 80's hits have the most staying power? Are they the most memorable? I'm not even an 80's baby, yet it seems like most references to music in various forms of media, also so much radio play, and generally the songs I see most referenced/recited seem to be from the 80's. What's up with that? Do songs from this decade have the most staying power? Are they somehow inherently the most memorable and recite-able? If so, what makes them such? Only thing I can think of is that that's maybe the first decade where folks really starting locking/honing in on the more formulaic approach to hit-making? Also, it's imo the decade most recognizable by production trends.
+
+**Possible labels:**  
+`reasoned_opinion`, `community_prompt`
+
+**Final label:**  
+`community_prompt`
+
+**Decision:**  
+I chose `community_prompt` because most of the post is framed as a series of questions asking the community to explain the staying power of 80s hits. Although the author offers a brief hypothesis about formulaic hit-making and production trends, that idea is not developed enough to become the main argument.
 
 ---
 
 ## Data Collection Plan
 
-I will collect at least 200 public posts and comments from **r/LetsTalkMusic**. I will save the data in a single CSV file with the columns `text`, `label`, `source_type`, `permalink`, and `notes`.
+I will collect at least 200 public posts and comments from **r/LetsTalkMusic**. I will save the data in a single CSV file with the columns `text`, `label`, and `notes`.
 
 My target distribution is roughly balanced across the three labels:
 
@@ -114,6 +160,10 @@ My target distribution is roughly balanced across the three labels:
 * `community_prompt`: about 65–75 examples
 
 If one label is underrepresented after collecting 200 examples, I will collect additional examples for that label before training. I will avoid letting any one label exceed 70% of the dataset because that could cause the model to over-predict the majority class.
+
+*Milestone 3 updates:*
+* I have removed columns for `source_type` and `permalink` because they are not needed for training or evaluation. I will keep the `notes` column for any relevant information about the labeling process.
+* After initial annotation, `community_prompt` was underrepresented, so I collected additional examples for that label. The final distribution is documented in the README.
 
 ---
 
