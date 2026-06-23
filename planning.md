@@ -23,67 +23,67 @@ I chose [**r/LetsTalkMusic**](https://www.reddit.com/r/LetsTalkMusic/) because i
 ### evidence_based_take
 
 **Definition:**  
-A post that makes a clear claim about music and supports it with specific evidence such as songs, albums, lyrics, production details, chart history, genre history, music theory, or concrete comparisons.
+* A post/comment that makes a clear claim about music and supports it with specific evidence such as songs, albums, lyrics, production details, chart history, genre history, music theory, or concrete comparisons.
 
 **Inclusion criteria:**  
-Use this label when the author is not just stating an opinion, but building an argument with evidence.
+* Use this label when the author is not just stating an opinion, but building an argument with evidence.
 
 **Exclusion criteria:**  
-Do not use this label if the post only names songs or artists without explaining how they support the claim.
+* Do not use this label if the post only names songs, albums, or artists without explaining how they support the claim. Mentions alone are not evidence.
 
 **Clear examples:**  
 1. [“James Brown has a strong argument for being the most influential figure in popular music and doesn't get enough credit for it”](https://www.reddit.com/r/LetsTalkMusic/comments/1tewic0/james_brown_has_a_strong_argument_for_being_the/)  
 2. [“Britain's most successful singles band had just one hit in America”](https://www.reddit.com/r/LetsTalkMusic/comments/1u4qhax/britains_most_successful_singles_band_had_just/)
 
 **Boundary / edge case:**  
-This can overlap with `reasoned_opinion` when a post includes examples but still mainly feels like personal taste.
+* This can overlap with `reasoned_opinion` when a post includes examples but still mainly feels like personal taste.
 
 **Decision rule:**  
-Use `evidence_based_take` only if the examples are central to proving the claim. If the examples are mostly decorative, use `reasoned_opinion`.
+* Use `evidence_based_take` only if the examples are central to proving the claim. If the examples are mostly decorative, use `reasoned_opinion`.
 
 
 ### reasoned_opinion
 
 **Definition:**  
-A post that gives a personal opinion about music and explains the reasoning, but relies mostly on subjective interpretation rather than strong evidence.
+* A post/comment that gives a personal opinion about music and explains the reasoning, but relies mostly on subjective interpretation rather than strong evidence.
 
 **Inclusion criteria:**  
-Use this label when the author explains why they feel a certain way about an artist, album, song, genre, or trend.
+* Use this label when the author explains why they feel a certain way about an artist, album, song, genre, or trend.
 
 **Exclusion criteria:**  
-Do not use this label if the post has little explanation beyond praise, dislike, shock, or a one-line reaction.
+* Do not use this label if the post has little explanation beyond praise, dislike, shock, or a one-line reaction.
 
 **Clear examples:**  
 1. [“Lyrics are massively overvalued in how people judge music”](https://www.reddit.com/r/LetsTalkMusic/comments/1tfmp9w/lyrics_are_massively_overvalued_in_how_people/)  
 2. [“I do not understand wanting to hear an album again for the first time”](https://www.reddit.com/r/LetsTalkMusic/comments/1u44dqt/i_do_not_understand_wanting_to_hear_an_album/)
 
 **Boundary / edge case:**  
-This can overlap with `evidence_based_take` when the post includes examples, artists, or albums but still relies mostly on personal interpretation.
+* This can overlap with `evidence_based_take` when the post includes examples, artists, or albums but still relies mostly on personal interpretation.
 
 **Decision rule:**  
-Use `reasoned_opinion` if the author gives at least one meaningful reason but does not use specific evidence as the main support for the claim. Use `evidence_based_take` only when the examples are central to proving the argument.
-
+* Use `reasoned_opinion` if the author gives at least one meaningful reason but does not use specific evidence as the main support for the claim. Use `evidence_based_take` only when the examples are central to proving the argument.
+* If a post mentions artists, albums, or songs but uses them mostly to describe personal taste, memory, preference, or reaction, label it reasoned_opinion instead of evidence_based_take.
 
 ### community_prompt
 
 **Definition:**  
-A post that mainly asks the community for recommendations, lists, memories, favorites, examples, or personal experiences instead of developing its own argument.
+* A post/comment that mainly asks the community for recommendations, lists, memories, favorites, examples, or personal experiences instead of developing its own argument.
 
 **Inclusion criteria:**  
-Use this label when the post is designed to generate responses from other users.
+* Use this label when the post is designed to generate responses from other users.
 
 **Exclusion criteria:**  
-Do not use this label if the author asks a question after making a substantial argument; in that case, label the post based on the argument.
+* Do not use this label if the author asks a question after making a substantial argument; in that case, label the post based on the argument.
 
 **Clear examples:**  
 1. [“What was the last CD you bought and why?”](https://www.reddit.com/r/LetsTalkMusic/comments/1u5kinp/what_was_the_last_cd_you_bought_and_why/)  
 2. [“How do you organise your playlist?”](https://www.reddit.com/r/LetsTalkMusic/comments/1u57xsy/how_do_you_organise_your_playlists/)
 
 **Boundary / edge case:**  
-This can overlap with `reasoned_opinion` when the author gives their own view before asking the question.
+* This can overlap with `reasoned_opinion` when the author gives their own view before asking the question.
 
 **Decision rule:**  
-Use `community_prompt` if the question is the main content. If the author’s own argument is substantial, use `reasoned_opinion` or `evidence_based_take`.
+* Use `community_prompt` if the question is the main content. If the author’s own argument is substantial, use `reasoned_opinion` or `evidence_based_take`.
 
 ---
 
