@@ -137,28 +137,30 @@ The final test set contained **33 examples**.
 
 I increased the number of training epochs from **3 to 5**.
 
-In an earlier run, the 3-epoch model over-predicted `evidence_based_take`, especially when posts mentioned specific artists, albums, or songs. I increased training to 5 epochs so the classifier had more passes over the small dataset. The final 5-epoch run reached **0.697 validation accuracy** and produced a final test accuracy of **0.667**.
+In an earlier run, the 3-epoch model over-predicted `evidence_based_take`, especially when posts mentioned specific artists, albums, or songs. I increased training to 5 epochs so the classifier had more passes over the small dataset. The final 5-epoch run reached **0.697 validation accuracy** and produced a final test accuracy of **0.788**.
 
 Main training settings:
 
-| Setting             |                     Value |
-| ------------------- | ------------------------: |
-| Base model          | `distilbert-base-uncased` |
-| Training platform   |              Google Colab |
-| Epochs              |                         5 |
-| Learning rate       |                    `2e-5` |
-| Train batch size    |                        16 |
-| Eval batch size     |                        32 |
-| Weight decay        |                      0.01 |
-| Evaluation strategy |                 per epoch |
+| Setting               |                     Value |
+| --------------------- | ------------------------: |
+| Base model            | `distilbert-base-uncased` |
+| Training platform     |              Google Colab |
+| Epochs                |                         5 |
+| Learning rate         |                    `2e-5` |
+| Train batch size      |                        16 |
+| Eval batch size       |                        32 |
+| Weight decay          |                      0.01 |
+| Warmup steps          |                        50 |
+| Evaluation strategy   |                 per epoch |
+| Save strategy         |                 per epoch |
+| Metric for best model |                `accuracy` |
+| Logging steps         |                        10 |
 
 ## Baseline Approach
 
 The baseline was a zero-shot Groq model prompted with the same label definitions and asked to return exactly one label name.
 
-The project specification recommended using Groq’s `llama-3.3-70b-versatile`. I initially attempted that model, but the run hit Groq’s token-per-day limit before completing the full test set. To keep the comparison complete on all 33 test examples, I used Groq’s **`llama-3.1-8b-instant`** instead.
-
-The baseline and fine-tuned model were evaluated on the same locked test set.
+I used Groq’s **`llama-3.3-70b-versatile`** for the zero-shot baseline. The baseline and fine-tuned DistilBERT model were evaluated on the same locked test set of 33 examples.
 
 ### Baseline Prompt Summary
 
@@ -181,36 +183,34 @@ The model was instructed to output only the label name.
 
 The final evaluation compared the zero-shot Groq baseline and the fine-tuned DistilBERT model on the same 33-example test set.
 
-| Model                                             | Accuracy |
-| ------------------------------------------------- | -------: |
-| Zero-shot Groq baseline (`llama-3.1-8b-instant`)  |    0.697 |
-| Fine-tuned DistilBERT (`distilbert-base-uncased`) |    0.667 |
+| Model                                               | Accuracy |
+| --------------------------------------------------- | -------: |
+| Zero-shot Groq baseline (`llama-3.3-70b-versatile`) |    0.667 |
+| Fine-tuned DistilBERT (`distilbert-base-uncased`)   |    0.788 |
 
-The fine-tuned model did not outperform the zero-shot baseline. The baseline was about **0.03** higher in accuracy.
-
-This means the project did not fully meet my original definition of success, which required the fine-tuned model to outperform the zero-shot baseline. However, the fine-tuned model still learned meaningful label patterns and produced useful failure cases for analysis.
+The fine-tuned model outperformed the zero-shot baseline by **0.121 accuracy**. This met my original success goal of exceeding 70% accuracy and beating the zero-shot baseline on the same test set.
 
 ### Fine-Tuned Model Per-Class Metrics
 
 | Label                 | Precision | Recall | F1-score | Support |
 | --------------------- | --------: | -----: | -------: | ------: |
-| `evidence_based_take` |      0.67 |   1.00 |     0.80 |      14 |
-| `reasoned_opinion`    |      0.64 |   0.58 |     0.61 |      12 |
-| `community_prompt`    |      1.00 |   0.14 |     0.25 |       7 |
-| **Accuracy**          |           |        | **0.67** |      33 |
-| **Macro avg**         |      0.77 |   0.58 |     0.55 |      33 |
-| **Weighted avg**      |      0.73 |   0.67 |     0.61 |      33 |
+| `evidence_based_take` |      0.74 |   1.00 |     0.85 |      14 |
+| `reasoned_opinion`    |      0.86 |   0.50 |     0.63 |      12 |
+| `community_prompt`    |      0.86 |   0.86 |     0.86 |       7 |
+| **Accuracy**          |           |        | **0.79** |      33 |
+| **Macro avg**         |      0.82 |   0.79 |     0.78 |      33 |
+| **Weighted avg**      |      0.81 |   0.79 |     0.77 |      33 |
 
 ### Baseline Per-Class Metrics
 
 | Label                 | Precision | Recall | F1-score | Support |
 | --------------------- | --------: | -----: | -------: | ------: |
-| `evidence_based_take` |      0.88 |   0.50 |     0.64 |      14 |
-| `reasoned_opinion`    |      0.58 |   0.92 |     0.71 |      12 |
-| `community_prompt`    |      0.83 |   0.71 |     0.77 |       7 |
-| **Accuracy**          |           |        | **0.70** |      33 |
-| **Macro avg**         |      0.76 |   0.71 |     0.71 |      33 |
-| **Weighted avg**      |      0.76 |   0.70 |     0.69 |      33 |
+| `evidence_based_take` |      1.00 |   0.36 |     0.53 |      14 |
+| `reasoned_opinion`    |      0.52 |   0.92 |     0.67 |      12 |
+| `community_prompt`    |      0.86 |   0.86 |     0.86 |       7 |
+| **Accuracy**          |           |        | **0.67** |      33 |
+| **Macro avg**         |      0.79 |   0.71 |     0.68 |      33 |
+| **Weighted avg**      |      0.80 |   0.67 |     0.65 |      33 |
 
 ## Confusion Matrix
 
@@ -225,34 +225,34 @@ Text version:
 | True label \ Predicted label | `evidence_based_take` | `reasoned_opinion` | `community_prompt` |
 | ---------------------------- | --------------------: | -----------------: | -----------------: |
 | `evidence_based_take`        |                    14 |                  0 |                  0 |
-| `reasoned_opinion`           |                     5 |                  7 |                  0 |
-| `community_prompt`           |                     2 |                  4 |                  1 |
+| `reasoned_opinion`           |                     5 |                  6 |                  1 |
+| `community_prompt`           |                     0 |                  1 |                  6 |
 
-The confusion matrix shows that the fine-tuned model recognized `evidence_based_take` very strongly, correctly identifying all 14 test examples in that class. However, it struggled with `community_prompt`, correctly identifying only 1 of 7 examples. Most `community_prompt` errors were predicted as `reasoned_opinion`, suggesting that the model had difficulty recognizing when a post’s main purpose was to ask the community for responses rather than make an argument.
+The confusion matrix shows that the fine-tuned model recognized `evidence_based_take` very strongly, correctly identifying all 14 test examples in that class. It also performed well on `community_prompt`, correctly identifying 6 of 7 examples. The weakest class was `reasoned_opinion`, where 5 of 12 examples were predicted as `evidence_based_take`.
 
 ## Error Analysis
 
-The fine-tuned model made **11 wrong predictions out of 33 test examples**.
+The fine-tuned model made **7 wrong predictions out of 33 test examples**.
 
-### Main Failure Pattern 1: Over-predicting `evidence_based_take`
+### Main Failure Pattern 1: Over-predicting `evidence_based_take` for subjective opinions
 
 The most common failure pattern was that the model predicted `evidence_based_take` when a post or comment mentioned artists, albums, songs, music eras, or examples. This happened even when the author was mainly giving a subjective opinion.
 
-For example, one true `reasoned_opinion` comment said that music quality is mostly about whether something emotionally moves the listener rather than anything technical or objective. The model predicted `evidence_based_take` with **0.44 confidence**, likely because the comment discussed evaluation criteria for music. However, the author was describing a personal standard, so `reasoned_opinion` was the correct label.
+For example, one true `reasoned_opinion` comment said that music quality is mostly about whether something emotionally moves the listener rather than anything technical or objective. The model predicted `evidence_based_take` with **0.52 confidence**, likely because the comment discussed evaluation criteria for music. However, the author was describing a personal standard, so `reasoned_opinion` was the correct label.
 
-Another true `reasoned_opinion` comment criticized a cover song as emotionally empty and musically boring. The model predicted `evidence_based_take` with **0.39 confidence**, likely because the comment gave specific musical criticism. However, the reasoning was still subjective rather than evidence-based.
+Another true `reasoned_opinion` comment discussed Olivia Rodrigo and album praise, mentioning references and listener reactions. The model predicted `evidence_based_take` with **0.52 confidence**, likely because it treated references to specific artists or musical context as evidence-based support. However, the comment was mainly a subjective interpretation of why people praised the album.
 
-### Main Failure Pattern 2: Missing `community_prompt`
+### Main Failure Pattern 2: Struggling with reflective `reasoned_opinion` examples
 
-The model also struggled to identify `community_prompt`. It often predicted `reasoned_opinion` or `evidence_based_take` when the post included background context before asking the community a question.
+Several `reasoned_opinion` examples were misclassified as `evidence_based_take` when the author reflected on music history, artists, or personal changes in taste. For example, one comment discussed changing opinions about popular music, boy bands, girl groups, and late-1990s pop. The correct label was `reasoned_opinion`, but the model predicted `evidence_based_take` with **0.47 confidence**.
 
-For example, a post asked whether 80s hits have the most staying power and why they seem so memorable. The correct label was `community_prompt`, but the model predicted `reasoned_opinion` with **0.35 confidence**. The model likely focused on the author’s brief hypothesis about formulaic hit-making and production trends instead of recognizing that the main purpose was to ask the community for explanations.
+This suggests that the model learned to associate historical or artist-specific references with `evidence_based_take`, even when those references were being used as part of a personal reflection rather than as evidence in a structured argument.
 
-Another post asked what a song draws from musically, including possible references to English pub music or traditional music. The correct label was `community_prompt`, but the model predicted `reasoned_opinion` with **0.38 confidence**. The post was asking the community to help identify influences, not making a developed argument.
+### Main Failure Pattern 3: Boundary between `community_prompt` and `reasoned_opinion`
 
-### Main Failure Pattern 3: Surface cues mattered too much
+The model performed much better on `community_prompt` than in earlier runs, but it still missed one prompt-style example. A post asked whether there is a recognizable “Reddit music taste” and gave background context about websites, forums, magazines, and critic fanbases. The true label was `community_prompt`, but the model predicted `reasoned_opinion` with **0.36 confidence**.
 
-The model appeared to rely on surface cues such as named artists, historical periods, and long explanations. These cues often appear in `evidence_based_take`, but they also appear in subjective opinions and prompts. This suggests that the model learned some vocabulary patterns from the dataset but did not always learn the deeper difference between evidence, reasoning, and intent.
+The likely issue is that the post included enough background framing to look like a conceptual argument. However, the main purpose was still to ask the community to define or discuss a shared pattern.
 
 ## Specific Wrong Predictions
 
@@ -263,7 +263,7 @@ A user says music quality is mostly about whether it emotionally moves them rath
 
 **True label:** `reasoned_opinion`
 **Predicted label:** `evidence_based_take`
-**Confidence:** 0.44
+**Confidence:** 0.52
 
 **Analysis:**
 The model likely misclassified this because the comment discusses evaluation criteria for music, which can resemble analysis. However, the author is mainly describing a subjective personal standard, so `reasoned_opinion` is the better label.
@@ -271,51 +271,52 @@ The model likely misclassified this because the comment discusses evaluation cri
 ### Wrong Prediction 2
 
 **Text summary:**
-A user criticizes a cover song as emotionally empty, musically boring, and reliant on vocal tricks.
+A user discusses Olivia Rodrigo and says some praise for an album may come from listeners’ affinity for the references she is citing.
 
 **True label:** `reasoned_opinion`
 **Predicted label:** `evidence_based_take`
-**Confidence:** 0.39
+**Confidence:** 0.52
 
 **Analysis:**
-The model likely treated specific musical criticism as evidence-based analysis. The comment gives reasons, but those reasons are subjective judgments about emotional impact and musical boredom rather than a structured evidence-based argument.
+The model likely treated the mention of specific artists, references, and album context as evidence-based support. However, the comment is mainly explaining a subjective view about why listeners respond positively to the album.
 
 ### Wrong Prediction 3
 
 **Text summary:**
-A post asks whether 80s hits have the most staying power and asks the community why those songs seem so memorable.
+A post asks whether there is a recognizable “Reddit music taste” and gives background context about different websites, forums, magazines, and fanbases.
 
 **True label:** `community_prompt`
 **Predicted label:** `reasoned_opinion`
-**Confidence:** 0.35
+**Confidence:** 0.36
 
 **Analysis:**
-The model likely focused on the author’s brief hypothesis about production trends and formulaic hit-making. The correct label is `community_prompt` because most of the post is framed as questions asking the community for explanations.
+The model likely focused on the post’s background explanation and interpreted it as a reasoned opinion. The correct label is `community_prompt` because the main purpose is to ask the community to define or discuss a shared pattern.
 
 ## Sample Classifications
 
-| Text summary                                                                                            | Predicted label       | Confidence | Correct? | Explanation                                                                                                                          |
-| ------------------------------------------------------------------------------------------------------- | --------------------- | ---------: | -------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| A post/comment made a claim supported by specific examples and was classified as `evidence_based_take`. | `evidence_based_take` |        N/A | Yes      | This prediction is reasonable because the text used examples as support rather than just naming artists or albums.                   |
-| A user says music quality is about whether it emotionally moves them rather than technical standards.   | `evidence_based_take` |       0.44 | No       | The correct label was `reasoned_opinion`; the model likely confused discussion of evaluation standards with evidence-based analysis. |
-| A post asks whether 80s hits have the most staying power and asks the community to explain why.         | `reasoned_opinion`    |       0.35 | No       | The correct label was `community_prompt`; the post mainly asks the community for explanations.                                       |
-| A comment criticizes a cover song as emotionally empty and musically boring.                            | `evidence_based_take` |       0.39 | No       | The correct label was `reasoned_opinion`; the comment gives subjective reasoning, not a structured evidence-based argument.          |
+| Text summary                                                                                                                                | Predicted label       | Confidence | Correct? | Explanation                                                                                                                                      |
+| ------------------------------------------------------------------------------------------------------------------------------------------- | --------------------- | ---------: | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| A comment discusses internet file sharing, music books, and historical context around music access.                                         | `evidence_based_take` |       0.39 | Yes      | This prediction is reasonable because the text uses historical context and specific details to support its discussion.                           |
+| A post argues that Insane Clown Posse is underrated and compares public dislike of them with other hated music groups.                      | `evidence_based_take` |       0.60 | Yes      | The model correctly identified this as evidence-based because the post supports its claim with comparisons and specific music-community context. |
+| A comment explains why most people do not treat music as an obsessive hobby and are not searching for experimental textures or new artists. | `reasoned_opinion`    |       0.39 | Yes      | This prediction is reasonable because the comment gives an explained interpretation but relies mostly on subjective reasoning.                   |
+| A user says music quality is about whether it emotionally moves them rather than technical standards.                                       | `evidence_based_take` |       0.52 | No       | The correct label was `reasoned_opinion`; the model likely confused discussion of evaluation standards with evidence-based analysis.             |
+| A post asks whether there is a recognizable “Reddit music taste.”                                                                           | `reasoned_opinion`    |       0.36 | No       | The correct label was `community_prompt`; the post mainly asks the community to discuss a shared pattern.                                        |
 
 ## Reflection: What the Model Learned vs. What I Intended
 
-I intended the model to learn the structural difference between supported arguments, subjective reasoning, and community prompts. The model partially learned this distinction, especially for `evidence_based_take`, where it achieved high recall.
+I intended the model to learn the structural difference between supported arguments, subjective reasoning, and community prompts. The model learned this distinction better than I expected after the final dataset adjustment and 5-epoch training run. It performed especially well on `evidence_based_take` and `community_prompt`.
 
-However, the model also appeared to overfit to surface-level signals. It often treated named artists, songs, eras, or specific examples as signs of `evidence_based_take`, even when those examples were part of a subjective opinion. It also struggled with `community_prompt` posts that included background explanation before asking the community a question.
+However, the model still struggled with the boundary between `evidence_based_take` and `reasoned_opinion`. It often treated named artists, songs, eras, or specific examples as signs of `evidence_based_take`, even when those examples were part of a subjective opinion. This shows a gap between my label definitions and what the model learned.
 
-This shows a gap between my label definitions and what the model learned. I wanted the model to classify based on the author’s intent and how evidence was used, but the model often classified based on visible content features such as length, named examples, and music-specific vocabulary.
+I wanted the model to classify based on how evidence was used and what the author’s main intent was. The model sometimes classified based on visible content features such as length, named examples, and music-specific vocabulary.
 
-To improve this model, I would collect more `community_prompt` examples that include long setups, and more `reasoned_opinion` examples that mention artists or songs without using them as structured evidence. That would help the model learn the hard boundaries more clearly.
+To improve this model, I would collect more `reasoned_opinion` examples that mention specific artists or songs without using them as structured evidence. That would help the model learn that simply naming an artist or song is not enough to make a post evidence-based.
 
 ## Spec Reflection
 
 One way the spec helped was by forcing me to define the labels before collecting the full dataset. That made the annotation process more consistent because I had decision rules for difficult cases such as question-based posts with long personal arguments.
 
-One way my implementation diverged from the spec was the zero-shot baseline model. I originally attempted to use Groq’s `llama-3.3-70b-versatile`, but the full baseline run hit Groq’s token-per-day limit before completing the test set. To keep the baseline comparison complete on all 33 test examples, I used Groq’s `llama-3.1-8b-instant` instead and documented the change.
+One way my implementation diverged from my original plan was the dataset structure. I originally planned to track `source_type` and `permalink`, but I simplified the final CSV to `text`, `label`, and `notes` for compatibility with the starter notebook and easier model training. I still documented the source community and labeling process in the README and planning document.
 
 ## AI Usage
 
