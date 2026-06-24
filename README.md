@@ -356,12 +356,4 @@ README.md
 
 ## Demo Video
 
-Demo video link: TODO
-
-The demo should show:
-
-* 3–5 posts being classified by the fine-tuned model
-* label and confidence visible
-* one correct prediction with explanation
-* one incorrect prediction with explanation
-* brief walkthrough of the evaluation report
+Demo video link: [Link](https://youtu.be/Vw7HFZJLOd4)
